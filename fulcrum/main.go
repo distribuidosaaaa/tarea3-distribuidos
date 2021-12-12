@@ -78,7 +78,7 @@ func (s *FulcrumServer) AddCity(
 	defer planetFile.Close()
 	if _, err := planetFile.WriteString(
 		fmt.Sprintf(
-			"%v %v %v",
+			"%v %v %v\n",
 			informanteMessage.PlanetName,
 			informanteMessage.CityName,
 			informanteMessage.NewValue,

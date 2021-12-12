@@ -85,8 +85,8 @@ func choose(command string, s *InformantServer) {
 	} else if commandList[0] == "DeleteCity" {
 		message := &protos.InformantMessage{
 			PlanetName: commandList[1],
-			CityName:   commandList[2],
-			NewValue:   commandList[3][:len(commandList[3])-1],
+			CityName:   commandList[2][:len(commandList[2])-1],
+			NewValue:   "",
 		}
 		response, _ := s.broker.DeleteCity(context.Background(), message)
 		conn, err := grpc.Dial(response.Replica, grpc.WithInsecure())
