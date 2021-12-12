@@ -19,7 +19,7 @@ const _ = grpc.SupportPackageIsVersion7
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type BrokerServiceClient interface {
 	AddCity(ctx context.Context, in *InformantMessage, opts ...grpc.CallOption) (*BrokerWriteMessage, error)
-	UpdateName(ctx context.Context, in *InformantMessage, opts ...grpc.CallOption) (*BrokerWriteMessage, error)
+	UpdateName(ctx context.Context, in *InformantStringValueMessage, opts ...grpc.CallOption) (*BrokerWriteMessage, error)
 	UpdateNumber(ctx context.Context, in *InformantMessage, opts ...grpc.CallOption) (*BrokerWriteMessage, error)
 	DeleteCity(ctx context.Context, in *InformantMessage, opts ...grpc.CallOption) (*BrokerWriteMessage, error)
 }
@@ -41,7 +41,7 @@ func (c *brokerServiceClient) AddCity(ctx context.Context, in *InformantMessage,
 	return out, nil
 }
 
-func (c *brokerServiceClient) UpdateName(ctx context.Context, in *InformantMessage, opts ...grpc.CallOption) (*BrokerWriteMessage, error) {
+func (c *brokerServiceClient) UpdateName(ctx context.Context, in *InformantStringValueMessage, opts ...grpc.CallOption) (*BrokerWriteMessage, error) {
 	out := new(BrokerWriteMessage)
 	err := c.cc.Invoke(ctx, "/protoStarWars.BrokerService/UpdateName", in, out, opts...)
 	if err != nil {
@@ -73,7 +73,7 @@ func (c *brokerServiceClient) DeleteCity(ctx context.Context, in *InformantMessa
 // for forward compatibility
 type BrokerServiceServer interface {
 	AddCity(context.Context, *InformantMessage) (*BrokerWriteMessage, error)
-	UpdateName(context.Context, *InformantMessage) (*BrokerWriteMessage, error)
+	UpdateName(context.Context, *InformantStringValueMessage) (*BrokerWriteMessage, error)
 	UpdateNumber(context.Context, *InformantMessage) (*BrokerWriteMessage, error)
 	DeleteCity(context.Context, *InformantMessage) (*BrokerWriteMessage, error)
 	mustEmbedUnimplementedBrokerServiceServer()
@@ -86,7 +86,7 @@ type UnimplementedBrokerServiceServer struct {
 func (UnimplementedBrokerServiceServer) AddCity(context.Context, *InformantMessage) (*BrokerWriteMessage, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AddCity not implemented")
 }
-func (UnimplementedBrokerServiceServer) UpdateName(context.Context, *InformantMessage) (*BrokerWriteMessage, error) {
+func (UnimplementedBrokerServiceServer) UpdateName(context.Context, *InformantStringValueMessage) (*BrokerWriteMessage, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateName not implemented")
 }
 func (UnimplementedBrokerServiceServer) UpdateNumber(context.Context, *InformantMessage) (*BrokerWriteMessage, error) {
@@ -127,7 +127,7 @@ func _BrokerService_AddCity_Handler(srv interface{}, ctx context.Context, dec fu
 }
 
 func _BrokerService_UpdateName_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(InformantMessage)
+	in := new(InformantStringValueMessage)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -139,7 +139,7 @@ func _BrokerService_UpdateName_Handler(srv interface{}, ctx context.Context, dec
 		FullMethod: "/protoStarWars.BrokerService/UpdateName",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(BrokerServiceServer).UpdateName(ctx, req.(*InformantMessage))
+		return srv.(BrokerServiceServer).UpdateName(ctx, req.(*InformantStringValueMessage))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -213,7 +213,7 @@ var BrokerService_ServiceDesc = grpc.ServiceDesc{
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type FulcrumServiceClient interface {
 	AddCity(ctx context.Context, in *InformantMessage, opts ...grpc.CallOption) (*FulcrumWriteMessage, error)
-	UpdateName(ctx context.Context, in *InformantMessage, opts ...grpc.CallOption) (*FulcrumWriteMessage, error)
+	UpdateName(ctx context.Context, in *InformantStringValueMessage, opts ...grpc.CallOption) (*FulcrumWriteMessage, error)
 	UpdateNumber(ctx context.Context, in *InformantMessage, opts ...grpc.CallOption) (*FulcrumWriteMessage, error)
 	DeleteCity(ctx context.Context, in *InformantMessage, opts ...grpc.CallOption) (*FulcrumWriteMessage, error)
 }
@@ -235,7 +235,7 @@ func (c *fulcrumServiceClient) AddCity(ctx context.Context, in *InformantMessage
 	return out, nil
 }
 
-func (c *fulcrumServiceClient) UpdateName(ctx context.Context, in *InformantMessage, opts ...grpc.CallOption) (*FulcrumWriteMessage, error) {
+func (c *fulcrumServiceClient) UpdateName(ctx context.Context, in *InformantStringValueMessage, opts ...grpc.CallOption) (*FulcrumWriteMessage, error) {
 	out := new(FulcrumWriteMessage)
 	err := c.cc.Invoke(ctx, "/protoStarWars.FulcrumService/UpdateName", in, out, opts...)
 	if err != nil {
@@ -267,7 +267,7 @@ func (c *fulcrumServiceClient) DeleteCity(ctx context.Context, in *InformantMess
 // for forward compatibility
 type FulcrumServiceServer interface {
 	AddCity(context.Context, *InformantMessage) (*FulcrumWriteMessage, error)
-	UpdateName(context.Context, *InformantMessage) (*FulcrumWriteMessage, error)
+	UpdateName(context.Context, *InformantStringValueMessage) (*FulcrumWriteMessage, error)
 	UpdateNumber(context.Context, *InformantMessage) (*FulcrumWriteMessage, error)
 	DeleteCity(context.Context, *InformantMessage) (*FulcrumWriteMessage, error)
 	mustEmbedUnimplementedFulcrumServiceServer()
@@ -280,7 +280,7 @@ type UnimplementedFulcrumServiceServer struct {
 func (UnimplementedFulcrumServiceServer) AddCity(context.Context, *InformantMessage) (*FulcrumWriteMessage, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AddCity not implemented")
 }
-func (UnimplementedFulcrumServiceServer) UpdateName(context.Context, *InformantMessage) (*FulcrumWriteMessage, error) {
+func (UnimplementedFulcrumServiceServer) UpdateName(context.Context, *InformantStringValueMessage) (*FulcrumWriteMessage, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateName not implemented")
 }
 func (UnimplementedFulcrumServiceServer) UpdateNumber(context.Context, *InformantMessage) (*FulcrumWriteMessage, error) {
@@ -321,7 +321,7 @@ func _FulcrumService_AddCity_Handler(srv interface{}, ctx context.Context, dec f
 }
 
 func _FulcrumService_UpdateName_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(InformantMessage)
+	in := new(InformantStringValueMessage)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -333,7 +333,7 @@ func _FulcrumService_UpdateName_Handler(srv interface{}, ctx context.Context, de
 		FullMethod: "/protoStarWars.FulcrumService/UpdateName",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(FulcrumServiceServer).UpdateName(ctx, req.(*InformantMessage))
+		return srv.(FulcrumServiceServer).UpdateName(ctx, req.(*InformantStringValueMessage))
 	}
 	return interceptor(ctx, in, info, handler)
 }

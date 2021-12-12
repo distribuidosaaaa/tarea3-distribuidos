@@ -44,7 +44,7 @@ func (s *FulcrumServer) AddCity(
 
 func (s *FulcrumServer) UpdateName(
 	ctx context.Context,
-	informanteMessage *protos.InformantMessage,
+	informanteMessage *protos.InformantStringValueMessage,
 ) (*protos.FulcrumWriteMessage, error) {
 	s.planets[informanteMessage.PlanetName][informanteMessage.CityName] = s.planets[informanteMessage.PlanetName][informanteMessage.NewValue]
 	return &protos.FulcrumWriteMessage{}, nil
