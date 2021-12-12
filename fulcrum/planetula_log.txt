@@ -1,0 +1,5 @@
+AddCity planetula ciudadgina 1
+UpdateName planetula ciudadkk 2
+UpdateName planetula ciudadgina ciudadkk
+UpdateNumber planetula ciudadgina
+ 

@@ -45,7 +45,7 @@ func choose(command string, s *InformantServer) {
 			&protos.InformantMessage{
 				PlanetName: commandList[1],
 				CityName:   commandList[2],
-				NewValue:   commandList[3],
+				NewValue:   commandList[3][:len(commandList[3])-1],
 			},
 		)
 		fmt.Printf("replica: %d\n", response.Replica)
@@ -55,7 +55,7 @@ func choose(command string, s *InformantServer) {
 			&protos.InformantMessage{
 				PlanetName: commandList[1],
 				CityName:   commandList[2],
-				NewValue:   commandList[3],
+				NewValue:   commandList[3][:len(commandList[3])-1],
 			},
 		)
 		fmt.Printf("replica: %d\n", response.Replica)
