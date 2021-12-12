@@ -17,7 +17,7 @@ import (
 
 type FulcrumServer struct {
 	protos.UnimplementedFulcrumServiceServer
-	planets        map[string]map[string]int
+	planets        map[string]map[string]string
 	planetVersions map[string]*[3]int
 	updateOn       int
 }
@@ -28,7 +28,7 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	m := make(map[string]map[string]int)
+	m := make(map[string]map[string]string)
 	v := make(map[string]*[3]int)
 	var opts []grpc.ServerOption
 	grpcServer := grpc.NewServer(opts...)
@@ -53,7 +53,7 @@ func (s *FulcrumServer) AddCity(
 	if !found {
 		fmt.Println("Creando planeta...")
 		// si no existe el planeta inicializamos todo como corresponde
-		s.planets[informanteMessage.PlanetName] = make(map[string]int)
+		s.planets[informanteMessage.PlanetName] = make(map[string]string)
 		s.planetVersions[informanteMessage.PlanetName] = &[3]int{0, 0, 0}
 		f, e := os.Create(fmt.Sprintf("%v.txt", informanteMessage.PlanetName))
 		if e != nil {
@@ -70,7 +70,7 @@ func (s *FulcrumServer) AddCity(
 	}
 	// guardamos los datos
 	s.planetVersions[informanteMessage.PlanetName][s.updateOn]++
-	s.planets[informanteMessage.PlanetName][informanteMessage.CityName] = int(informanteMessage.NewValue)
+	s.planets[informanteMessage.PlanetName][informanteMessage.CityName] = informanteMessage.NewValue
 	planetFile, err := os.OpenFile(fmt.Sprintf("%v.txt", informanteMessage.PlanetName), os.O_APPEND|os.O_WRONLY, 0777)
 	if err != nil {
 		log.Println(err)
@@ -78,7 +78,7 @@ func (s *FulcrumServer) AddCity(
 	defer planetFile.Close()
 	if _, err := planetFile.WriteString(
 		fmt.Sprintf(
-			"%v %v %d",
+			"%v %v %v",
 			informanteMessage.PlanetName,
 			informanteMessage.CityName,
 			informanteMessage.NewValue,
@@ -87,7 +87,7 @@ func (s *FulcrumServer) AddCity(
 		log.Fatal(err)
 	}
 	UpdateLog(
-		fmt.Sprintf("AddCity %v %v %d", informanteMessage.PlanetName, informanteMessage.CityName, informanteMessage.NewValue),
+		fmt.Sprintf("AddCity %v %v %v", informanteMessage.PlanetName, informanteMessage.CityName, informanteMessage.NewValue),
 		informanteMessage.PlanetName,
 	)
 	return &protos.FulcrumWriteMessage{}, nil
@@ -95,7 +95,7 @@ func (s *FulcrumServer) AddCity(
 
 func (s *FulcrumServer) UpdateName(
 	ctx context.Context,
-	informanteMessage *protos.InformantStringValueMessage,
+	informanteMessage *protos.InformantMessage,
 ) (*protos.FulcrumWriteMessage, error) {
 	// updateamos archivo planeta
 	fileName := fmt.Sprintf("%v.txt", informanteMessage.PlanetName)
@@ -108,7 +108,7 @@ func (s *FulcrumServer) UpdateName(
 
 	for i, line := range lines {
 		if strings.Contains(line, informanteMessage.CityName) {
-			lines[i] = fmt.Sprintf("%v %v %d", informanteMessage.PlanetName, informanteMessage.NewValue, s.planets[informanteMessage.PlanetName][informanteMessage.CityName])
+			lines[i] = fmt.Sprintf("%v %v %v", informanteMessage.PlanetName, informanteMessage.NewValue, s.planets[informanteMessage.PlanetName][informanteMessage.CityName])
 		}
 	}
 	output := strings.Join(lines, "\n")
@@ -142,7 +142,7 @@ func (s *FulcrumServer) UpdateNumber(
 
 	for i, line := range lines {
 		if strings.Contains(line, informanteMessage.CityName) {
-			lines[i] = fmt.Sprintf("%v %v %d", informanteMessage.PlanetName, informanteMessage.CityName, informanteMessage.NewValue)
+			lines[i] = fmt.Sprintf("%v %v %v", informanteMessage.PlanetName, informanteMessage.CityName, informanteMessage.NewValue)
 		}
 	}
 	output := strings.Join(lines, "\n")
@@ -156,7 +156,7 @@ func (s *FulcrumServer) UpdateNumber(
 		informanteMessage.PlanetName,
 	)
 	s.planetVersions[informanteMessage.PlanetName][s.updateOn]++
-	s.planets[informanteMessage.PlanetName][informanteMessage.CityName] = int(informanteMessage.NewValue)
+	s.planets[informanteMessage.PlanetName][informanteMessage.CityName] = informanteMessage.NewValue
 	return &protos.FulcrumWriteMessage{}, nil
 }
 

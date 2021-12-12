@@ -7,7 +7,6 @@ import (
 	protos "informante/protobuffers"
 	"log"
 	"os"
-	"strconv"
 	"strings"
 
 	"google.golang.org/grpc"
@@ -41,20 +40,19 @@ func main() {
 func choose(command string, s *InformantServer) {
 	commandList := strings.Split(command, " ")
 	if commandList[0] == "AddCity" {
-		value, _ := strconv.ParseInt(commandList[3], 10, 8)
 		response, _ := s.broker.AddCity(
 			context.Background(),
 			&protos.InformantMessage{
 				PlanetName: commandList[1],
 				CityName:   commandList[2],
-				NewValue:   int32(value),
+				NewValue:   commandList[3],
 			},
 		)
 		fmt.Printf("replica: %d\n", response.Replica)
 	} else if commandList[0] == "UpdateName" {
 		response, _ := s.broker.UpdateName(
 			context.Background(),
-			&protos.InformantStringValueMessage{
+			&protos.InformantMessage{
 				PlanetName: commandList[1],
 				CityName:   commandList[2],
 				NewValue:   commandList[3],
@@ -62,13 +60,12 @@ func choose(command string, s *InformantServer) {
 		)
 		fmt.Printf("replica: %d\n", response.Replica)
 	} else if commandList[0] == "UpdateNumber" {
-		value, _ := strconv.ParseInt(commandList[3], 10, 8)
 		response, _ := s.broker.UpdateNumber(
 			context.Background(),
 			&protos.InformantMessage{
 				PlanetName: commandList[1],
 				CityName:   commandList[2],
-				NewValue:   int32(value),
+				NewValue:   commandList[3],
 			},
 		)
 		fmt.Printf("replica: %d\n", response.Replica)
@@ -78,7 +75,7 @@ func choose(command string, s *InformantServer) {
 			&protos.InformantMessage{
 				PlanetName: commandList[1],
 				CityName:   commandList[2],
-				NewValue:   0,
+				NewValue:   "",
 			},
 		)
 		fmt.Printf("replica: %d\n", response.Replica)

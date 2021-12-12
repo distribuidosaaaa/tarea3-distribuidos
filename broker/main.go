@@ -53,7 +53,7 @@ func (s *BrokerServer) AddCity(
 
 func (s *BrokerServer) UpdateName(
 	ctx context.Context,
-	informanteMessage *protos.InformantStringValueMessage,
+	informanteMessage *protos.InformantMessage,
 ) (*protos.BrokerWriteMessage, error) {
 	fulcrumPort := 50010
 	conn, err := grpc.Dial(fmt.Sprintf("localhost:%d", fulcrumPort), grpc.WithInsecure())
