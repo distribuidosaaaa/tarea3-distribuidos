@@ -50,3 +50,57 @@ func (s *BrokerServer) AddCity(
 	}
 	return &protos.BrokerWriteMessage{Confirm: true, Replica: 9002}, nil
 }
+
+func (s *BrokerServer) UpdateName(
+	ctx context.Context,
+	informanteMessage *protos.InformantStringValueMessage,
+) (*protos.BrokerWriteMessage, error) {
+	fulcrumPort := 50010
+	conn, err := grpc.Dial(fmt.Sprintf("localhost:%d", fulcrumPort), grpc.WithInsecure())
+	if err != nil {
+		log.Fatalf("No se logró conectar a broker: %s", err)
+	}
+	fmt.Println("Cambiando nombre a ciudad...")
+	fulcrumService := protos.NewFulcrumServiceClient(conn)
+	_, errorr := fulcrumService.UpdateName(context.Background(), informanteMessage)
+	if errorr != nil {
+		log.Println("Error con fulcrum no se pudo actualizar nombre")
+	}
+	return &protos.BrokerWriteMessage{Confirm: true, Replica: 9002}, nil
+}
+
+func (s *BrokerServer) UpdateNumber(
+	ctx context.Context,
+	informanteMessage *protos.InformantMessage,
+) (*protos.BrokerWriteMessage, error) {
+	fulcrumPort := 50010
+	conn, err := grpc.Dial(fmt.Sprintf("localhost:%d", fulcrumPort), grpc.WithInsecure())
+	if err != nil {
+		log.Fatalf("No se logró conectar a broker: %s", err)
+	}
+	fmt.Println("Actualizando espias en ciudad...")
+	fulcrumService := protos.NewFulcrumServiceClient(conn)
+	_, errorr := fulcrumService.UpdateNumber(context.Background(), informanteMessage)
+	if errorr != nil {
+		log.Println("Error con fulcrum no se pudo actualizar espias")
+	}
+	return &protos.BrokerWriteMessage{Confirm: true, Replica: 9002}, nil
+}
+
+func (s *BrokerServer) DeleteCity(
+	ctx context.Context,
+	informanteMessage *protos.InformantMessage,
+) (*protos.BrokerWriteMessage, error) {
+	fulcrumPort := 50010
+	conn, err := grpc.Dial(fmt.Sprintf("localhost:%d", fulcrumPort), grpc.WithInsecure())
+	if err != nil {
+		log.Fatalf("No se logró conectar a broker: %s", err)
+	}
+	fmt.Println("Eliminando ciudad")
+	fulcrumService := protos.NewFulcrumServiceClient(conn)
+	_, errorr := fulcrumService.UpdateNumber(context.Background(), informanteMessage)
+	if errorr != nil {
+		log.Println("Error con fulcrum no se pudo eliminar ciudad")
+	}
+	return &protos.BrokerWriteMessage{Confirm: true, Replica: 9002}, nil
+}

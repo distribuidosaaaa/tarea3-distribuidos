@@ -52,11 +52,36 @@ func choose(command string, s *InformantServer) {
 		)
 		fmt.Printf("replica: %d\n", response.Replica)
 	} else if commandList[0] == "UpdateName" {
-		fmt.Printf("aun no implementado\n")
+		response, _ := s.broker.UpdateName(
+			context.Background(),
+			&protos.InformantStringValueMessage{
+				PlanetName: commandList[1],
+				CityName:   commandList[2],
+				NewValue:   commandList[3],
+			},
+		)
+		fmt.Printf("replica: %d\n", response.Replica)
 	} else if commandList[0] == "UpdateNumber" {
-		fmt.Printf("aun no implementado\n")
+		value, _ := strconv.ParseInt(commandList[3], 10, 8)
+		response, _ := s.broker.UpdateNumber(
+			context.Background(),
+			&protos.InformantMessage{
+				PlanetName: commandList[1],
+				CityName:   commandList[2],
+				NewValue:   int32(value),
+			},
+		)
+		fmt.Printf("replica: %d\n", response.Replica)
 	} else if commandList[0] == "DeleteCity" {
-		fmt.Printf("aun no implementado\n")
+		response, _ := s.broker.DeleteCity(
+			context.Background(),
+			&protos.InformantMessage{
+				PlanetName: commandList[1],
+				CityName:   commandList[2],
+				NewValue:   0,
+			},
+		)
+		fmt.Printf("replica: %d\n", response.Replica)
 	} else {
 		fmt.Printf("ingresar valido\n")
 	}
