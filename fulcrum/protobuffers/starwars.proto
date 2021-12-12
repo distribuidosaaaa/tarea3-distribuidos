@@ -4,7 +4,7 @@ package protoStarWars;
 
 service BrokerService {
     rpc AddCity(InformantMessage) returns (BrokerWriteMessage) {}
-    rpc UpdateName(InformantMessage) returns (BrokerWriteMessage) {}
+    rpc UpdateName(InformantStringValueMessage) returns (BrokerWriteMessage) {}
     rpc UpdateNumber(InformantMessage) returns (BrokerWriteMessage) {}
     rpc DeleteCity(InformantMessage) returns (BrokerWriteMessage) {}
 }
@@ -12,7 +12,7 @@ service BrokerService {
 
 service FulcrumService {
     rpc AddCity(InformantMessage) returns (FulcrumWriteMessage) {}
-    rpc UpdateName(InformantMessage) returns (FulcrumWriteMessage) {}
+    rpc UpdateName(InformantStringValueMessage) returns (FulcrumWriteMessage) {}
     rpc UpdateNumber(InformantMessage) returns (FulcrumWriteMessage) {}
     rpc DeleteCity(InformantMessage) returns (FulcrumWriteMessage) {}
 }
@@ -25,6 +25,12 @@ message InformantMessage {
     string PlanetName = 1;
     string CityName = 2 ;
     int32 newValue = 3;
+}
+
+message InformantStringValueMessage {
+    string PlanetName = 1;
+    string CityName = 2 ;
+    string newValue = 3;
 }
 
 message BrokerWriteMessage {

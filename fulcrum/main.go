@@ -11,6 +11,7 @@ import (
 
 type FulcrumServer struct {
 	protos.UnimplementedFulcrumServiceServer
+	planets map[string]map[string]int
 }
 
 func main() {
@@ -19,9 +20,10 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
+	m := make(map[string]map[string]int)
 	var opts []grpc.ServerOption
 	grpcServer := grpc.NewServer(opts...)
-	server := FulcrumServer{}
+	server := FulcrumServer{planets: m}
 	protos.RegisterFulcrumServiceServer(grpcServer, &server)
 	startServer(listener, *grpcServer)
 }
@@ -36,7 +38,7 @@ func (s *FulcrumServer) AddCity(
 	ctx context.Context,
 	informanteMessage *protos.InformantMessage,
 ) (*protos.FulcrumWriteMessage, error) {
-
+	s.planets[informanteMessage.PlanetName][informanteMessage.CityName] = int(informanteMessage.NewValue)
 	return &protos.FulcrumWriteMessage{}, nil
 }
 
@@ -44,7 +46,7 @@ func (s *FulcrumServer) UpdateName(
 	ctx context.Context,
 	informanteMessage *protos.InformantMessage,
 ) (*protos.FulcrumWriteMessage, error) {
-
+	s.planets[informanteMessage.PlanetName][informanteMessage.CityName] = s.planets[informanteMessage.PlanetName][informanteMessage.NewValue]
 	return &protos.FulcrumWriteMessage{}, nil
 }
 
@@ -52,7 +54,7 @@ func (s *FulcrumServer) UpdateNumber(
 	ctx context.Context,
 	informanteMessage *protos.InformantMessage,
 ) (*protos.FulcrumWriteMessage, error) {
-
+	s.planets[informanteMessage.PlanetName][informanteMessage.CityName] = int(informanteMessage.NewValue)
 	return &protos.FulcrumWriteMessage{}, nil
 }
 
@@ -60,6 +62,6 @@ func (s *FulcrumServer) DeleteCity(
 	ctx context.Context,
 	informanteMessage *protos.InformantMessage,
 ) (*protos.FulcrumWriteMessage, error) {
-
+	delete(s.planets[informanteMessage.PlanetName], informanteMessage.CityName)
 	return &protos.FulcrumWriteMessage{}, nil
 }
