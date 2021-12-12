@@ -47,9 +47,11 @@ func (s *FulcrumServer) AddCity(
 	ctx context.Context,
 	informanteMessage *protos.InformantMessage,
 ) (*protos.FulcrumWriteMessage, error) {
+	fmt.Println("Aadiendo ciudad...")
 	// verificamos si ya existe
 	_, found := s.planetVersions[informanteMessage.PlanetName]
 	if !found {
+		fmt.Println("Creando planeta...")
 		// si no existe el planeta inicializamos todo como corresponde
 		s.planets[informanteMessage.PlanetName] = make(map[string]int)
 		s.planetVersions[informanteMessage.PlanetName] = &[3]int{0, 0, 0}

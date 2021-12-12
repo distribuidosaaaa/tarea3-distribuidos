@@ -4,6 +4,7 @@ import (
 	protos "broker/protobuffers"
 	"context"
 	"fmt"
+	"log"
 	"net"
 
 	"google.golang.org/grpc"
@@ -36,5 +37,16 @@ func (s *BrokerServer) AddCity(
 	ctx context.Context,
 	informanteMessage *protos.InformantMessage,
 ) (*protos.BrokerWriteMessage, error) {
+	fulcrumPort := 50010
+	conn, err := grpc.Dial(fmt.Sprintf("localhost:%d", fulcrumPort), grpc.WithInsecure())
+	if err != nil {
+		log.Fatalf("No se logró conectar a broker: %s", err)
+	}
+	fmt.Println("Añadiendo ciudad...")
+	fulcrumService := protos.NewFulcrumServiceClient(conn)
+	_, errorr := fulcrumService.AddCity(context.Background(), informanteMessage)
+	if errorr != nil {
+		log.Fatalf("Error con fulcrum no se pudo añadir ciudad")
+	}
 	return &protos.BrokerWriteMessage{Confirm: true, Replica: 9002}, nil
 }
