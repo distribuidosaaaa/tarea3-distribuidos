@@ -1,0 +1,33 @@
+syntax = "proto3";
+option go_package = "./";
+package protoStarWars;
+
+service BrokerService {
+    rpc AddCity(InformantMessage) returns (BrokerWriteMessage) {}
+    rpc UpdateName(InformantMessage) returns (BrokerWriteMessage) {}
+    rpc UpdateNumber(InformantMessage) returns (BrokerWriteMessage) {}
+    rpc DeleteCity(InformantMessage) returns (BrokerWriteMessage) {}
+}
+
+
+service FulcrumService {
+    rpc AddCity(InformantMessage) returns (FulcrumWriteMessage) {}
+    rpc UpdateName(InformantMessage) returns (FulcrumWriteMessage) {}
+    rpc UpdateNumber(InformantMessage) returns (FulcrumWriteMessage) {}
+    rpc DeleteCity(InformantMessage) returns (FulcrumWriteMessage) {}
+}
+
+message FulcrumWriteMessage {
+
+}
+
+message InformantMessage {
+    string PlanetName = 1;
+    string CityName = 2 ;
+    int32 newValue = 3;
+}
+
+message BrokerWriteMessage {
+    bool confirm = 1;
+    int32 replica = 2;
+}
