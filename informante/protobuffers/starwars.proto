@@ -29,6 +29,5 @@ message InformantMessage {
 
 
 message BrokerWriteMessage {
-    bool confirm = 1;
-    int32 replica = 2;
+    string replica = 1;
 }

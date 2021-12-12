@@ -12,6 +12,7 @@ import (
 
 type BrokerServer struct {
 	protos.UnimplementedBrokerServiceServer
+	replicas []string
 }
 
 func main() {
@@ -22,7 +23,10 @@ func main() {
 	}
 	var opts []grpc.ServerOption
 	grpcServer := grpc.NewServer(opts...)
-	server := BrokerServer{}
+	replicas := []string{
+		"localhost:50010",
+	}
+	server := BrokerServer{replicas: replicas}
 	protos.RegisterBrokerServiceServer(grpcServer, &server)
 	startServer(listener, *grpcServer)
 }
@@ -48,7 +52,7 @@ func (s *BrokerServer) AddCity(
 	if errorr != nil {
 		log.Fatalf("Error con fulcrum no se pudo añadir ciudad")
 	}
-	return &protos.BrokerWriteMessage{Confirm: true, Replica: 9002}, nil
+	return &protos.BrokerWriteMessage{Replica: s.replicas[0]}, nil
 }
 
 func (s *BrokerServer) UpdateName(
@@ -66,7 +70,7 @@ func (s *BrokerServer) UpdateName(
 	if errorr != nil {
 		log.Println("Error con fulcrum no se pudo actualizar nombre")
 	}
-	return &protos.BrokerWriteMessage{Confirm: true, Replica: 9002}, nil
+	return &protos.BrokerWriteMessage{Replica: s.replicas[0]}, nil
 }
 
 func (s *BrokerServer) UpdateNumber(
@@ -84,7 +88,7 @@ func (s *BrokerServer) UpdateNumber(
 	if errorr != nil {
 		log.Println("Error con fulcrum no se pudo actualizar espias")
 	}
-	return &protos.BrokerWriteMessage{Confirm: true, Replica: 9002}, nil
+	return &protos.BrokerWriteMessage{Replica: s.replicas[0]}, nil
 }
 
 func (s *BrokerServer) DeleteCity(
@@ -102,5 +106,5 @@ func (s *BrokerServer) DeleteCity(
 	if errorr != nil {
 		log.Println("Error con fulcrum no se pudo eliminar ciudad")
 	}
-	return &protos.BrokerWriteMessage{Confirm: true, Replica: 9002}, nil
+	return &protos.BrokerWriteMessage{Replica: s.replicas[0]}, nil
 }

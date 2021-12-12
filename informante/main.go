@@ -27,6 +27,7 @@ func main() {
 	}
 	broker := protos.NewBrokerServiceClient(conn)
 	server := InformantServer{broker: broker}
+
 	for !finish {
 		fmt.Println("...")
 		reader := bufio.NewReader(os.Stdin)
@@ -40,45 +41,61 @@ func main() {
 func choose(command string, s *InformantServer) {
 	commandList := strings.Split(command, " ")
 	if commandList[0] == "AddCity" {
-		response, _ := s.broker.AddCity(
-			context.Background(),
-			&protos.InformantMessage{
-				PlanetName: commandList[1],
-				CityName:   commandList[2],
-				NewValue:   commandList[3][:len(commandList[3])-1],
-			},
-		)
-		fmt.Printf("replica: %d\n", response.Replica)
+		message := &protos.InformantMessage{
+			PlanetName: commandList[1],
+			CityName:   commandList[2],
+			NewValue:   commandList[3][:len(commandList[3])-1],
+		}
+		response, _ := s.broker.AddCity(context.Background(), message)
+		conn, err := grpc.Dial(response.Replica, grpc.WithInsecure())
+		if err != nil {
+			log.Fatalf("No se logró conectar a broker: %s", err)
+		}
+		fulcrum := protos.NewFulcrumServiceClient(conn)
+		fulcrum.AddCity(context.Background(), message)
+		fmt.Printf("replica: %v\n", response.Replica)
 	} else if commandList[0] == "UpdateName" {
-		response, _ := s.broker.UpdateName(
-			context.Background(),
-			&protos.InformantMessage{
-				PlanetName: commandList[1],
-				CityName:   commandList[2],
-				NewValue:   commandList[3][:len(commandList[3])-1],
-			},
-		)
-		fmt.Printf("replica: %d\n", response.Replica)
+		message := &protos.InformantMessage{
+			PlanetName: commandList[1],
+			CityName:   commandList[2],
+			NewValue:   commandList[3][:len(commandList[3])-1],
+		}
+		response, _ := s.broker.UpdateName(context.Background(), message)
+		conn, err := grpc.Dial(response.Replica, grpc.WithInsecure())
+		if err != nil {
+			log.Fatalf("No se logró conectar a broker: %s", err)
+		}
+		fulcrum := protos.NewFulcrumServiceClient(conn)
+		fulcrum.UpdateName(context.Background(), message)
+		fmt.Printf("replica: %v\n", response.Replica)
 	} else if commandList[0] == "UpdateNumber" {
-		response, _ := s.broker.UpdateNumber(
-			context.Background(),
-			&protos.InformantMessage{
-				PlanetName: commandList[1],
-				CityName:   commandList[2],
-				NewValue:   commandList[3],
-			},
-		)
-		fmt.Printf("replica: %d\n", response.Replica)
+		message := &protos.InformantMessage{
+			PlanetName: commandList[1],
+			CityName:   commandList[2],
+			NewValue:   commandList[3][:len(commandList[3])-1],
+		}
+		response, _ := s.broker.UpdateNumber(context.Background(), message)
+		conn, err := grpc.Dial(response.Replica, grpc.WithInsecure())
+		if err != nil {
+			log.Fatalf("No se logró conectar a broker: %s", err)
+		}
+		fulcrum := protos.NewFulcrumServiceClient(conn)
+		fulcrum.UpdateNumber(context.Background(), message)
+		fmt.Printf("replica: %v\n", response.Replica)
 	} else if commandList[0] == "DeleteCity" {
-		response, _ := s.broker.DeleteCity(
-			context.Background(),
-			&protos.InformantMessage{
-				PlanetName: commandList[1],
-				CityName:   commandList[2],
-				NewValue:   "",
-			},
-		)
-		fmt.Printf("replica: %d\n", response.Replica)
+		message := &protos.InformantMessage{
+			PlanetName: commandList[1],
+			CityName:   commandList[2],
+			NewValue:   commandList[3][:len(commandList[3])-1],
+		}
+		response, _ := s.broker.DeleteCity(context.Background(), message)
+		conn, err := grpc.Dial(response.Replica, grpc.WithInsecure())
+		if err != nil {
+			log.Fatalf("No se logró conectar a broker: %s", err)
+		}
+		fulcrum := protos.NewFulcrumServiceClient(conn)
+		fulcrum.DeleteCity(context.Background(), message)
+		fmt.Printf("replica: %v\n", response.Replica)
 	} else {
 		fmt.Printf("ingresar valido\n")
 	}
