@@ -119,6 +119,7 @@ func (s *FulcrumServer) UpdateName(
 		fmt.Sprintf("UpdateName %v %v %v", informanteMessage.PlanetName, informanteMessage.CityName, informanteMessage.NewValue),
 		informanteMessage.PlanetName,
 	)
+	s.planetVersions[informanteMessage.PlanetName][s.updateOn]++
 	s.planets[informanteMessage.PlanetName][informanteMessage.NewValue] = s.planets[informanteMessage.PlanetName][informanteMessage.CityName]
 	delete(s.planets[informanteMessage.PlanetName], informanteMessage.CityName)
 	return &protos.FulcrumWriteMessage{}, nil
@@ -152,6 +153,7 @@ func (s *FulcrumServer) UpdateNumber(
 		fmt.Sprintf("UpdateName %v %v %v", informanteMessage.PlanetName, informanteMessage.CityName, informanteMessage.NewValue),
 		informanteMessage.PlanetName,
 	)
+	s.planetVersions[informanteMessage.PlanetName][s.updateOn]++
 	s.planets[informanteMessage.PlanetName][informanteMessage.CityName] = int(informanteMessage.NewValue)
 	return &protos.FulcrumWriteMessage{}, nil
 }
@@ -191,6 +193,7 @@ func (s *FulcrumServer) DeleteCity(
 	if err != nil {
 		log.Fatal(err)
 	}
+	s.planetVersions[informanteMessage.PlanetName][s.updateOn]++
 	delete(s.planets[informanteMessage.PlanetName], informanteMessage.CityName)
 	return &protos.FulcrumWriteMessage{}, nil
 }
