@@ -196,6 +196,10 @@ func (s *FulcrumServer) DeleteCity(
 		log.Fatal(err)
 	}
 	s.planetVersions[informanteMessage.PlanetName][s.updateOn]++
+	UpdateLog(
+		fmt.Sprintf("UpdateName %v %v", informanteMessage.PlanetName, informanteMessage.CityName),
+		informanteMessage.PlanetName,
+	)
 	delete(s.planets[informanteMessage.PlanetName], informanteMessage.CityName)
 	return &protos.FulcrumWriteMessage{}, nil
 }
