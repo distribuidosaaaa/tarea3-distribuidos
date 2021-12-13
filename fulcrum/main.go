@@ -18,7 +18,7 @@ import (
 type FulcrumServer struct {
 	protos.UnimplementedFulcrumServiceServer
 	planets        map[string]map[string]string
-	planetVersions map[string]*[3]int
+	planetVersions map[string]*[3]int32
 	updateOn       int
 }
 
@@ -29,7 +29,7 @@ func main() {
 		panic(err)
 	}
 	m := make(map[string]map[string]string)
-	v := make(map[string]*[3]int)
+	v := make(map[string]*[3]int32)
 	var opts []grpc.ServerOption
 	grpcServer := grpc.NewServer(opts...)
 	server := FulcrumServer{planets: m, planetVersions: v, updateOn: 1}
@@ -54,7 +54,7 @@ func (s *FulcrumServer) AddCity(
 		fmt.Println("Creando planeta...")
 		// si no existe el planeta inicializamos todo como corresponde
 		s.planets[informanteMessage.PlanetName] = make(map[string]string)
-		s.planetVersions[informanteMessage.PlanetName] = &[3]int{0, 0, 0}
+		s.planetVersions[informanteMessage.PlanetName] = &[3]int32{0, 0, 0}
 		f, e := os.Create(fmt.Sprintf("%v.txt", informanteMessage.PlanetName))
 		if e != nil {
 			panic(e)
@@ -90,7 +90,7 @@ func (s *FulcrumServer) AddCity(
 		fmt.Sprintf("AddCity %v %v %v\n", informanteMessage.PlanetName, informanteMessage.CityName, informanteMessage.NewValue),
 		informanteMessage.PlanetName,
 	)
-	return &protos.FulcrumWriteMessage{}, nil
+	return &protos.FulcrumWriteMessage{ClockValue: s.planetVersions[informanteMessage.PlanetName][:]}, nil
 }
 
 func (s *FulcrumServer) UpdateName(
@@ -124,7 +124,7 @@ func (s *FulcrumServer) UpdateName(
 	s.planetVersions[informanteMessage.PlanetName][s.updateOn]++
 	s.planets[informanteMessage.PlanetName][informanteMessage.NewValue] = s.planets[informanteMessage.PlanetName][informanteMessage.CityName]
 	delete(s.planets[informanteMessage.PlanetName], informanteMessage.CityName)
-	return &protos.FulcrumWriteMessage{}, nil
+	return &protos.FulcrumWriteMessage{ClockValue: s.planetVersions[informanteMessage.PlanetName][:]}, nil
 }
 
 func (s *FulcrumServer) UpdateNumber(
@@ -157,7 +157,7 @@ func (s *FulcrumServer) UpdateNumber(
 	)
 	s.planetVersions[informanteMessage.PlanetName][s.updateOn]++
 	s.planets[informanteMessage.PlanetName][informanteMessage.CityName] = informanteMessage.NewValue
-	return &protos.FulcrumWriteMessage{}, nil
+	return &protos.FulcrumWriteMessage{ClockValue: s.planetVersions[informanteMessage.PlanetName][:]}, nil
 }
 
 func (s *FulcrumServer) DeleteCity(
@@ -201,7 +201,7 @@ func (s *FulcrumServer) DeleteCity(
 		informanteMessage.PlanetName,
 	)
 	delete(s.planets[informanteMessage.PlanetName], informanteMessage.CityName)
-	return &protos.FulcrumWriteMessage{}, nil
+	return &protos.FulcrumWriteMessage{ClockValue: s.planetVersions[informanteMessage.PlanetName][:]}, nil
 }
 
 func UpdateLog(action string, planetName string) {

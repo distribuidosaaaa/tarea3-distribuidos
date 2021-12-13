@@ -1,0 +1,2 @@
+AddCity A B 23
+AddCity A C 4

@@ -12,10 +12,13 @@ import (
 	"google.golang.org/grpc"
 )
 
+type Planet struct {
+	clockVector []int32
+	address     string
+}
 type InformantServer struct {
-	replicaDirection int
-	replicaVector    []int
-	broker           protos.BrokerServiceClient
+	planets map[string]Planet
+	broker  protos.BrokerServiceClient
 }
 
 func main() {
@@ -26,7 +29,8 @@ func main() {
 		log.Fatalf("No se logró conectar a broker: %s", err)
 	}
 	broker := protos.NewBrokerServiceClient(conn)
-	server := InformantServer{broker: broker}
+	m := make(map[string]Planet)
+	server := InformantServer{broker: broker, planets: m}
 
 	for !finish {
 		fmt.Println("...")
@@ -52,8 +56,13 @@ func choose(command string, s *InformantServer) {
 			log.Fatalf("No se logró conectar a broker: %s", err)
 		}
 		fulcrum := protos.NewFulcrumServiceClient(conn)
-		fulcrum.AddCity(context.Background(), message)
+		fulcrumResponse, _ := fulcrum.AddCity(context.Background(), message)
 		fmt.Printf("replica: %v\n", response.Replica)
+		fmt.Printf("vector: %v\n", fulcrumResponse.ClockValue)
+		_, found := s.planets[commandList[1]]
+		if !found {
+			s.planets[commandList[1]] = Planet{clockVector: fulcrumResponse.ClockValue, address: response.Replica}
+		}
 	} else if commandList[0] == "UpdateName" {
 		message := &protos.InformantMessage{
 			PlanetName: commandList[1],
@@ -66,7 +75,8 @@ func choose(command string, s *InformantServer) {
 			log.Fatalf("No se logró conectar a broker: %s", err)
 		}
 		fulcrum := protos.NewFulcrumServiceClient(conn)
-		fulcrum.UpdateName(context.Background(), message)
+		fulcrumResponse, _ := fulcrum.UpdateName(context.Background(), message)
+		s.planets[commandList[1]] = Planet{clockVector: fulcrumResponse.ClockValue, address: response.Replica}
 		fmt.Printf("replica: %v\n", response.Replica)
 	} else if commandList[0] == "UpdateNumber" {
 		message := &protos.InformantMessage{
@@ -80,8 +90,9 @@ func choose(command string, s *InformantServer) {
 			log.Fatalf("No se logró conectar a broker: %s", err)
 		}
 		fulcrum := protos.NewFulcrumServiceClient(conn)
-		fulcrum.UpdateNumber(context.Background(), message)
+		fulcrumResponse, _ := fulcrum.UpdateNumber(context.Background(), message)
 		fmt.Printf("replica: %v\n", response.Replica)
+		s.planets[commandList[1]] = Planet{clockVector: fulcrumResponse.ClockValue, address: response.Replica}
 	} else if commandList[0] == "DeleteCity" {
 		message := &protos.InformantMessage{
 			PlanetName: commandList[1],
@@ -94,8 +105,10 @@ func choose(command string, s *InformantServer) {
 			log.Fatalf("No se logró conectar a broker: %s", err)
 		}
 		fulcrum := protos.NewFulcrumServiceClient(conn)
-		fulcrum.DeleteCity(context.Background(), message)
+		fulcrumResponse, _ := fulcrum.DeleteCity(context.Background(), message)
 		fmt.Printf("replica: %v\n", response.Replica)
+		fmt.Printf("vector: %v\n", fulcrumResponse.ClockValue)
+		s.planets[commandList[1]] = Planet{clockVector: fulcrumResponse.ClockValue, address: response.Replica}
 	} else {
 		fmt.Printf("ingresar valido\n")
 	}
