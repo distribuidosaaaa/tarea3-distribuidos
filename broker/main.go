@@ -4,6 +4,7 @@ import (
 	protos "broker/protobuffers"
 	"context"
 	"fmt"
+	"log"
 	"net"
 
 	"google.golang.org/grpc"
@@ -62,4 +63,17 @@ func (s *BrokerServer) DeleteCity(
 	informanteMessage *protos.InformantMessage,
 ) (*protos.BrokerWriteMessage, error) {
 	return &protos.BrokerWriteMessage{Replica: s.replicas[0]}, nil
+}
+
+func (s *BrokerServer) GetRebelds(
+	ctx context.Context,
+	leiaMessage *protos.LeiaMessage,
+) (*protos.BrokerReadMessage, error) {
+	conn, err := grpc.Dial(s.replicas[0], grpc.WithInsecure())
+	if err != nil {
+		log.Fatalf("No se logró conectar a replica: %s", err)
+	}
+	replica := protos.NewFulcrumServiceClient(conn)
+	response, _ := replica.GetRebelds(context.Background(), leiaMessage)
+	return &protos.BrokerReadMessage{Address: s.replicas[0], Spies: response.Spies, ClockValue: response.ClockValue}, nil
 }

@@ -35,7 +35,7 @@ message BrokerWriteMessage {
 }
 
 message BrokerReadMessage {
-    int32 Spies = 1;
+    string Spies = 1;
     repeated int32 ClockValue = 2;
     string Address = 3;
 }
