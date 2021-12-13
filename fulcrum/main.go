@@ -204,6 +204,23 @@ func (s *FulcrumServer) DeleteCity(
 	return &protos.FulcrumWriteMessage{ClockValue: s.planetVersions[informanteMessage.PlanetName][:]}, nil
 }
 
+func (s *FulcrumServer) GetRebelds(ctx context.Context, leiaMessage *protos.LeiaMessage) (*protos.FulcrumReadMessage, error) {
+	fileName := fmt.Sprintf("%v.txt", leiaMessage.PlanetName)
+	input, err := ioutil.ReadFile(fileName)
+	if err != nil {
+		fmt.Println("Aun no se ha creado una ciudad con este nombre.")
+	}
+
+	lines := strings.Split(string(input), "\n")
+	for _, line := range lines {
+		if strings.Contains(line, leiaMessage.CityName) {
+			cityStatus := strings.Split(line, " ")
+			return &protos.FulcrumReadMessage{Spies: cityStatus[2][:len(cityStatus[2])-1], ClockValue: s.planetVersions[leiaMessage.PlanetName][:]}, nil
+		}
+	}
+	return &protos.FulcrumReadMessage{Spies: ""}, nil
+}
+
 func UpdateLog(action string, planetName string) {
 	logFile, err := os.OpenFile(fmt.Sprintf("%v_log.txt", planetName), os.O_APPEND|os.O_WRONLY, 0777)
 	if err != nil {
