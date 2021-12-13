@@ -108,10 +108,10 @@ func (s *FulcrumServer) UpdateName(
 
 	for i, line := range lines {
 		if strings.Contains(line, informanteMessage.CityName) {
-			lines[i] = fmt.Sprintf("%v %v %v\n", informanteMessage.PlanetName, informanteMessage.NewValue, s.planets[informanteMessage.PlanetName][informanteMessage.CityName])
+			lines[i] = fmt.Sprintf("%v %v %v", informanteMessage.PlanetName, informanteMessage.NewValue, s.planets[informanteMessage.PlanetName][informanteMessage.CityName])
 		}
 	}
-	output := strings.Join(lines, "")
+	output := strings.Join(lines, "\n")
 	err = ioutil.WriteFile(fileName, []byte(output), 0777)
 	if err != nil {
 		log.Fatalln(err)
@@ -142,10 +142,10 @@ func (s *FulcrumServer) UpdateNumber(
 
 	for i, line := range lines {
 		if strings.Contains(line, informanteMessage.CityName) {
-			lines[i] = fmt.Sprintf("%v %v %v\n", informanteMessage.PlanetName, informanteMessage.CityName, informanteMessage.NewValue)
+			lines[i] = fmt.Sprintf("%v %v %v", informanteMessage.PlanetName, informanteMessage.CityName, informanteMessage.NewValue)
 		}
 	}
-	output := strings.Join(lines, "")
+	output := strings.Join(lines, "\n")
 	err = ioutil.WriteFile(fileName, []byte(output), 0777)
 	if err != nil {
 		log.Fatalln(err)
