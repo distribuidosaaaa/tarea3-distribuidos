@@ -7,6 +7,7 @@ service BrokerService {
     rpc UpdateName(InformantMessage) returns (BrokerWriteMessage) {}
     rpc UpdateNumber(InformantMessage) returns (BrokerWriteMessage) {}
     rpc DeleteCity(InformantMessage) returns (BrokerWriteMessage) {}
+    rpc GetRebelds(LeiaMessage) returns (BrokerReadMessage) {}
 }
 
 
@@ -15,6 +16,7 @@ service FulcrumService {
     rpc UpdateName(InformantMessage) returns (FulcrumWriteMessage) {}
     rpc UpdateNumber(InformantMessage) returns (FulcrumWriteMessage) {}
     rpc DeleteCity(InformantMessage) returns (FulcrumWriteMessage) {}
+    rpc GetRebelds(LeiaMessage) returns (FulcrumReadMessage) {}
 }
 
 message FulcrumWriteMessage {
@@ -30,4 +32,20 @@ message InformantMessage {
 
 message BrokerWriteMessage {
     string replica = 1;
+}
+
+message BrokerReadMessage {
+    int32 Spies = 1;
+    repeated int32 ClockValue = 2;
+    string Address = 3;
+}
+
+message LeiaMessage {
+    string PlanetName = 1;
+    string CityName = 2;
+}
+
+message FulcrumReadMessage {
+    string spies = 1;
+    repeated int32 clockValue = 2;
 }

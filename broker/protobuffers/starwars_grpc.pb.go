@@ -22,6 +22,7 @@ type BrokerServiceClient interface {
 	UpdateName(ctx context.Context, in *InformantMessage, opts ...grpc.CallOption) (*BrokerWriteMessage, error)
 	UpdateNumber(ctx context.Context, in *InformantMessage, opts ...grpc.CallOption) (*BrokerWriteMessage, error)
 	DeleteCity(ctx context.Context, in *InformantMessage, opts ...grpc.CallOption) (*BrokerWriteMessage, error)
+	GetRebelds(ctx context.Context, in *LeiaMessage, opts ...grpc.CallOption) (*BrokerReadMessage, error)
 }
 
 type brokerServiceClient struct {
@@ -68,6 +69,15 @@ func (c *brokerServiceClient) DeleteCity(ctx context.Context, in *InformantMessa
 	return out, nil
 }
 
+func (c *brokerServiceClient) GetRebelds(ctx context.Context, in *LeiaMessage, opts ...grpc.CallOption) (*BrokerReadMessage, error) {
+	out := new(BrokerReadMessage)
+	err := c.cc.Invoke(ctx, "/protoStarWars.BrokerService/GetRebelds", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // BrokerServiceServer is the server API for BrokerService service.
 // All implementations must embed UnimplementedBrokerServiceServer
 // for forward compatibility
@@ -76,6 +86,7 @@ type BrokerServiceServer interface {
 	UpdateName(context.Context, *InformantMessage) (*BrokerWriteMessage, error)
 	UpdateNumber(context.Context, *InformantMessage) (*BrokerWriteMessage, error)
 	DeleteCity(context.Context, *InformantMessage) (*BrokerWriteMessage, error)
+	GetRebelds(context.Context, *LeiaMessage) (*BrokerReadMessage, error)
 	mustEmbedUnimplementedBrokerServiceServer()
 }
 
@@ -94,6 +105,9 @@ func (UnimplementedBrokerServiceServer) UpdateNumber(context.Context, *Informant
 }
 func (UnimplementedBrokerServiceServer) DeleteCity(context.Context, *InformantMessage) (*BrokerWriteMessage, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteCity not implemented")
+}
+func (UnimplementedBrokerServiceServer) GetRebelds(context.Context, *LeiaMessage) (*BrokerReadMessage, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetRebelds not implemented")
 }
 func (UnimplementedBrokerServiceServer) mustEmbedUnimplementedBrokerServiceServer() {}
 
@@ -180,6 +194,24 @@ func _BrokerService_DeleteCity_Handler(srv interface{}, ctx context.Context, dec
 	return interceptor(ctx, in, info, handler)
 }
 
+func _BrokerService_GetRebelds_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(LeiaMessage)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(BrokerServiceServer).GetRebelds(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/protoStarWars.BrokerService/GetRebelds",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(BrokerServiceServer).GetRebelds(ctx, req.(*LeiaMessage))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // BrokerService_ServiceDesc is the grpc.ServiceDesc for BrokerService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -203,6 +235,10 @@ var BrokerService_ServiceDesc = grpc.ServiceDesc{
 			MethodName: "DeleteCity",
 			Handler:    _BrokerService_DeleteCity_Handler,
 		},
+		{
+			MethodName: "GetRebelds",
+			Handler:    _BrokerService_GetRebelds_Handler,
+		},
 	},
 	Streams:  []grpc.StreamDesc{},
 	Metadata: "protobuffers/starwars.proto",
@@ -216,6 +252,7 @@ type FulcrumServiceClient interface {
 	UpdateName(ctx context.Context, in *InformantMessage, opts ...grpc.CallOption) (*FulcrumWriteMessage, error)
 	UpdateNumber(ctx context.Context, in *InformantMessage, opts ...grpc.CallOption) (*FulcrumWriteMessage, error)
 	DeleteCity(ctx context.Context, in *InformantMessage, opts ...grpc.CallOption) (*FulcrumWriteMessage, error)
+	GetRebelds(ctx context.Context, in *LeiaMessage, opts ...grpc.CallOption) (*FulcrumReadMessage, error)
 }
 
 type fulcrumServiceClient struct {
@@ -262,6 +299,15 @@ func (c *fulcrumServiceClient) DeleteCity(ctx context.Context, in *InformantMess
 	return out, nil
 }
 
+func (c *fulcrumServiceClient) GetRebelds(ctx context.Context, in *LeiaMessage, opts ...grpc.CallOption) (*FulcrumReadMessage, error) {
+	out := new(FulcrumReadMessage)
+	err := c.cc.Invoke(ctx, "/protoStarWars.FulcrumService/GetRebelds", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // FulcrumServiceServer is the server API for FulcrumService service.
 // All implementations must embed UnimplementedFulcrumServiceServer
 // for forward compatibility
@@ -270,6 +316,7 @@ type FulcrumServiceServer interface {
 	UpdateName(context.Context, *InformantMessage) (*FulcrumWriteMessage, error)
 	UpdateNumber(context.Context, *InformantMessage) (*FulcrumWriteMessage, error)
 	DeleteCity(context.Context, *InformantMessage) (*FulcrumWriteMessage, error)
+	GetRebelds(context.Context, *LeiaMessage) (*FulcrumReadMessage, error)
 	mustEmbedUnimplementedFulcrumServiceServer()
 }
 
@@ -288,6 +335,9 @@ func (UnimplementedFulcrumServiceServer) UpdateNumber(context.Context, *Informan
 }
 func (UnimplementedFulcrumServiceServer) DeleteCity(context.Context, *InformantMessage) (*FulcrumWriteMessage, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteCity not implemented")
+}
+func (UnimplementedFulcrumServiceServer) GetRebelds(context.Context, *LeiaMessage) (*FulcrumReadMessage, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetRebelds not implemented")
 }
 func (UnimplementedFulcrumServiceServer) mustEmbedUnimplementedFulcrumServiceServer() {}
 
@@ -374,6 +424,24 @@ func _FulcrumService_DeleteCity_Handler(srv interface{}, ctx context.Context, de
 	return interceptor(ctx, in, info, handler)
 }
 
+func _FulcrumService_GetRebelds_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(LeiaMessage)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(FulcrumServiceServer).GetRebelds(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/protoStarWars.FulcrumService/GetRebelds",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(FulcrumServiceServer).GetRebelds(ctx, req.(*LeiaMessage))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // FulcrumService_ServiceDesc is the grpc.ServiceDesc for FulcrumService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -396,6 +464,10 @@ var FulcrumService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "DeleteCity",
 			Handler:    _FulcrumService_DeleteCity_Handler,
+		},
+		{
+			MethodName: "GetRebelds",
+			Handler:    _FulcrumService_GetRebelds_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
