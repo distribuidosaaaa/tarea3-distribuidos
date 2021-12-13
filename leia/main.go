@@ -24,7 +24,7 @@ type InformantServer struct {
 func main() {
 	finish := false
 	brokerPort := 50001
-	conn, err := grpc.Dial(fmt.Sprintf("localhost:%d", brokerPort), grpc.WithInsecure())
+	conn, err := grpc.Dial(fmt.Sprintf("10.6.40.201:%d", brokerPort), grpc.WithInsecure())//dist 61
 	if err != nil {
 		log.Fatalf("No se logró conectar a broker: %s", err)
 	}

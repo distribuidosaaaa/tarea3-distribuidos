@@ -24,7 +24,7 @@ func main() {
 	var opts []grpc.ServerOption
 	grpcServer := grpc.NewServer(opts...)
 	replicas := []string{
-		"localhost:50010",
+		"10.6.40.202:50010",// dist 62 
 	}
 	server := BrokerServer{replicas: replicas}
 	protos.RegisterBrokerServiceServer(grpcServer, &server)
