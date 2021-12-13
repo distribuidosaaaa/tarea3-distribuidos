@@ -215,10 +215,10 @@ func (s *FulcrumServer) GetRebelds(ctx context.Context, leiaMessage *protos.Leia
 	for _, line := range lines {
 		if strings.Contains(line, leiaMessage.CityName) {
 			cityStatus := strings.Split(line, " ")
-			return &protos.FulcrumReadMessage{Spies: cityStatus[2][:len(cityStatus[2])-1], ClockValue: s.planetVersions[leiaMessage.PlanetName][:]}, nil
+			return &protos.FulcrumReadMessage{Spies: cityStatus[2], ClockValue: s.planetVersions[leiaMessage.PlanetName][:]}, nil
 		}
 	}
-	return &protos.FulcrumReadMessage{Spies: ""}, nil
+	return &protos.FulcrumReadMessage{Spies: "0", ClockValue: s.planetVersions[leiaMessage.PlanetName][:]}, nil
 }
 
 func UpdateLog(action string, planetName string) {

@@ -1,0 +1,5 @@
+AddCity planeta ciudad 32
+UpdateNumber planeta ciudad 443
+UpdateName planeta ciudad ciudad2
+DeleteCity planeta ciudad2
+AddCity planeta nuevaciudad 323

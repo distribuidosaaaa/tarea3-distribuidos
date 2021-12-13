@@ -52,6 +52,7 @@ func choose(command string, s *InformantServer) {
 		response, _ := s.broker.GetRebelds(context.Background(), message)
 		// guardo vector
 		s.planets[commandList[1]] = Planet{clockVector: response.ClockValue, address: response.Address}
+		fmt.Printf("espias: %v \n", response.Spies)
 	} else {
 		fmt.Println("Ingrese comando valido")
 	}
